@@ -9,6 +9,19 @@ ACPP_PlayerCharacter::ACPP_PlayerCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+    UCapsuleComponent* Cap = GetCapsuleComponent();
+ 
+    FPSBody = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FPSBody"));
+    FPSCam = CreateDefaultSubobject<UCameraComponent>(TEXT("FPSCam"));
+    FPSArms = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FPSArms"));
+
+    FPSBody->SetupAttachment(Cap);
+    FPSCam->SetupAttachment(Cap);
+    FPSArms->SetupAttachment(FPSCam);
+  
+    GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
+  
+
 }
 
 // Called when the game starts or when spawned
@@ -40,6 +53,9 @@ void ACPP_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
     PlayerInputComponent->BindAction("Jump",IE_Pressed, this, &ACPP_PlayerCharacter::Jump);
     PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACPP_PlayerCharacter::StopJumping);
+
+    PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ACPP_PlayerCharacter::ToggleCrouch);
+
 
 
 
@@ -94,6 +110,24 @@ void ACPP_PlayerCharacter::LookY(float Value)
         AddControllerPitchInput(Value);
 
     }
+
+}
+
+void ACPP_PlayerCharacter::ToggleCrouch()
+{
+  
+    if (bIsCrouched == false)
+    {
+        ACPP_PlayerCharacter::Crouch();
+        FPSBody->GetAnimInstance();
+
+    }
+
+    if (bIsCrouched == true)
+    {
+        ACPP_PlayerCharacter::UnCrouch();
+    }
+    
 
 }
 

@@ -4,7 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "CPP_PlayerCharacter.generated.h"
+
 
 UCLASS()
 class TESTPROJECT_API ACPP_PlayerCharacter : public ACharacter
@@ -19,6 +23,16 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		class USkeletalMeshComponent* FPSBody;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)		
+		class UCameraComponent* FPSCam;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)		
+		class USkeletalMeshComponent* FPSArms;
+
+
 	// Movement
 	void MoveForward(float Value);
 	void MoveRight(float Value);
@@ -26,6 +40,10 @@ protected:
 	//Look
 	void LookX(float Value);
 	void LookY(float Value);
+
+	//Toggle Crouching
+
+	void ToggleCrouch();
 
 
 public:	
